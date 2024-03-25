@@ -1,7 +1,7 @@
 require('../logger');
 const config = require('../../config.json');
 
-const Eris = require('eris');
+const Dysnomia = require('@projectdysnomia/dysnomia');
 const fs = require('fs'), path = require('path');
 const { Game, } = require('../Structures');
 const Sequelize = require('sequelize');
@@ -10,16 +10,20 @@ const Sender = require('./Sender');
 const GameManager = require('./GameManager');
 
 let conf = {
-  getAllUsers: false,
-  maxShards: Number(process.env.SHARDS_MAX),
-  firstShardID: Number(process.env.SHARDS_FIRST),
-  lastShardID: Number(process.env.SHARDS_LAST),
-  intents: [
-    'guilds',
-    'guildMessages',
-    'guildMembers',
-    'directMessages'
-  ],
+  gateway: {
+    getAllUsers: false,
+    maxShards: Number(process.env.SHARDS_MAX),
+    firstShardID: Number(process.env.SHARDS_FIRST),
+    lastShardID: Number(process.env.SHARDS_LAST),
+    intents: [
+      'guilds',
+      'guildMessages',
+      'guildMembers',
+      'directMessages',
+      'messageContent'
+    ],
+  },
+
   restMode: true,
 };
 if (config.shard) {
@@ -33,7 +37,7 @@ const { rules, ruleKeys, } = require('../rules');
 
 let ready = false;
 
-class Client extends Eris.Client {
+class Client extends Dysnomia.Client {
   constructor(...args) {
     super(...args);
 
